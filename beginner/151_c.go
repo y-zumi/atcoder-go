@@ -7,11 +7,6 @@ type submit struct {
 	result string
 }
 
-type score struct {
-	acNum int
-	waNum int
-}
-
 func main() {
 	var n, m int
 	fmt.Scan(&n, &m)
@@ -19,36 +14,29 @@ func main() {
 	submits := make([]submit, m)
 	for i, s := range submits {
 		fmt.Scan(&s.number, &s.result)
+		s.number--
 		submits[i] = s
 	}
-	s := cal(submits)
-	fmt.Println(s.acNum, s.waNum)
+	ac, wa := cal(submits, n)
+	fmt.Println(ac, wa)
 }
 
-func cal(submits []submit) score {
-	scores := make(map[int]*score)
+func cal(submits []submit, n int) (int, int) {
+	accepts := make([]bool, n)
+	warongs := make([]int, n)
+	cntAC, cntWA := 0, 0
 
 	for _, submit := range submits {
-		_, ok := scores[submit.number]
-		if !ok {
-			scores[submit.number] = &score{0, 0}
-		}
-
-		if scores[submit.number].acNum != 1 {
+		if accepts[submit.number] != true {
 			if submit.result == "AC" {
-				scores[submit.number].acNum++
-			}
-			if submit.result == "WA" {
-				scores[submit.number].waNum++
+				accepts[submit.number] = true
+				cntAC++
+				cntWA += warongs[submit.number]
+			} else if submit.result == "WA" {
+				warongs[submit.number]++
 			}
 		}
 	}
 
-	r := score{0, 0}
-	for _, s := range scores {
-		r.acNum += s.acNum
-		r.waNum += s.waNum
-	}
-
-	return r
+	return cntAC, cntWA
 }
