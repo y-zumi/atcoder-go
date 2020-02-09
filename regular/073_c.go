@@ -11,28 +11,35 @@ func main() {
 		fmt.Scan(&ts[i])
 	}
 
-	var sum int
+	var ans int
 	for i := 0; i < N-1; i++ {
-		sum += f(ts[i], ts[i+1], T)
+		diff := ts[i+1] - ts[i]
+
+		if diff >= T {
+			ans += T
+		} else {
+			ans += diff
+		}
 	}
-	fmt.Println(sum + T)
+	fmt.Println(ans + T)
 }
 
-func f(t1, t2, T int) int {
-	diff := abs(t1, t2)
-	if diff >= T {
-		return T
-	}
-	return diff
-}
+// func f(t1, t2, T int) int {
+// 	// diff := abs(t1, t2)
+// 	diff := t2 - t1
+// 	if diff >= T {
+// 		return T
+// 	}
+// 	return diff
+// }
 
-func abs(x, y int) int {
-	a := x - y
-	if a < 0 {
-		return a * -1
-	}
-	return a
-}
+// func abs(x, y int) int {
+// 	a := x - y
+// 	if a < 0 {
+// 		return a * -1
+// 	}
+// 	return a
+// }
 
 // t1 - t2 >= T
 // 通常加算
