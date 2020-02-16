@@ -1,0 +1,38 @@
+@startuml netpayment_sequence
+actor "User" as user
+participant "Mercari app" as mercari
+participant "Merpay app" as merpay
+participant "drop-shipping-jp" as server
+participant "netpayment" as netpayment
+
+autonumber
+
+user -> mercari: 商品の返却ボタン
+mercari -> server: req
+server -> netpayment: Authentication
+netpayment --> server: AccessToken
+server -> netpayment: CreateTransaction()
+netpayment --> server: transaction data
+server -> server: Save transactionId & paymentUrl
+server --> mercari: Open payment_url
+mercari -> merpay: Launch Merpay app
+
+merpay --> user: Display order screen
+user -> merpay: Process payment
+merpay -> netpayment: 
+netpayment -> netpayment: confirm payment
+netpayment -> server: Webhook : completion (Async)
+server --> netpayment: ACK
+netpayment --> merpay: 
+
+merpay --> user: notify payment completion
+merpay -> mercari: open return_url
+mercari --> user: display ???
+
+opt doesn't need it
+mercari -> server: acquire transaction information GetTransaction()
+server --> mercari: 
+mercari --> user: display payment completion screen
+end opt
+
+@enduml
