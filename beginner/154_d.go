@@ -5,14 +5,16 @@ import "fmt"
 func main() {
 	var n, k int
 	fmt.Scan(&n, &k)
-	p := make([]float64, n)
+	p := make([]int, n)
 	for i := range p {
 		fmt.Scan(&p[i])
+		// 任意の数に+1して2で割るとその数の期待値になる。計算中を整数でやりたいので、+1しておいて最後に2で割る
+		//(6+1)/2=3.5
+		p[i]++
 	}
 
-	idx := make([]float64, 0, k)
-	maxIdx := make([]float64, k)
-	var max, sum float64
+	idx := make([]int, 0, k)
+	var max, sum int
 	for i := 0; i < n; i++ {
 		sum += p[i]
 		idx = append(idx, p[i])
@@ -23,22 +25,10 @@ func main() {
 		if len(idx) == k {
 			if max < sum {
 				max = sum
-				copy(maxIdx, idx)
 			}
 		}
 	}
-
-	sum = 0.0
-	for _, v := range maxIdx {
-		sum += expectation(v)
-	}
-	fmt.Printf("%.12f\n", sum)
-}
-
-func expectation(p float64) float64 {
-	var sum float64
-	for i := 1.0; i <= p; i++ {
-		sum += i
-	}
-	return sum / p
+	ans := float64(max)
+	ans /= 2.0
+	fmt.Printf("%.12f\n", ans)
 }
