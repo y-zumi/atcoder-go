@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"container/list"
+	"fmt"
+	"strings"
+)
 
 type input struct {
 	q  int
@@ -14,44 +18,38 @@ func main() {
 	fmt.Scan(&s, &qn)
 
 	var q, f1 int
-	var f2 []byte
-	var reverseCnt int
-	top := make([]byte, 0, qn)
-	bottom := make([]byte, 0, qn)
+	var f2 string
+	rev := false
+	// top := make([]byte, 0, qn)
+	// bottom := make([]byte, 0, qn)
+	dq := list.New()
+	dq.PushFront(s)
 
 	for i := 0; i < qn; i++ {
 		fmt.Scan(&q)
 		if q == 1 {
-			reverseCnt++
-		}
-		if q == 2 {
+			rev = !rev
+		} else {
 			fmt.Scan(&f1, &f2)
-			if reverseCnt%2 == 0 {
-				if f1 == 1 {
-					top = append(f2, top...)
-				}
-				if f1 == 2 {
-					bottom = append(bottom, f2...)
-				}
+			if (!rev && f1 == 1) || (rev && f1 == 2) {
+				dq.PushFront(f2)
 			} else {
-				if f1 == 1 {
-					bottom = append(bottom, f2...)
-				}
-				if f1 == 2 {
-					top = append(f2, top...)
-
-				}
+				dq.PushBack(f2)
 			}
 		}
 	}
 
-	ans := append(top, []byte(s)...)
-	ans = append(ans, bottom...)
-	ansStr := string(ans)
-	if reverseCnt%2 == 1 {
-		ansStr = reverse(ansStr)
+	ss := make([]string, dq.Len())
+	i := 0
+	for e := dq.Front(); e != nil; e = e.Next() {
+		ss[i] = e.Value.(string)
+		i++
 	}
-	fmt.Println(ansStr)
+	ans := strings.Join(ss, "")
+	if rev {
+		ans = reverse(ans)
+	}
+	fmt.Println(ans)
 }
 
 func reverse(str string) string {
