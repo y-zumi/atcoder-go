@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
 	var n, m int
@@ -11,40 +14,32 @@ func main() {
 		fmt.Scan(&s[i], &c[i])
 	}
 
-	ans := make(map[int]int, n)
-	for i := 0; i < m; i++ {
-		v, ok := ans[s[i]]
-		if ok {
-			if v != c[i] {
-				fmt.Println(-1)
-				return
+	for i := 0; i < 1000; i++ {
+		str := strconv.Itoa(i)
+		rstr := []rune(str)
+		if len(rstr) != n {
+			continue
+		}
+
+		ans := true
+		for j := 0; j < m; j++ {
+			if string(rstr[s[j]-1]) != strconv.Itoa(c[j]) {
+				ans = false
 			}
 		}
-		if s[i] == 1 && c[i] == 0 {
-			fmt.Println(-1)
+		if ans {
+			fmt.Println(i)
 			return
 		}
-		ans[s[i]] = c[i]
 	}
 
-	var num int
-	v, ok := ans[1]
-	if ok {
-		num += v * 100
-	}
-	v, ok = ans[2]
-	if ok {
-		num += v * 10
-	}
-	v, ok = ans[3]
-	if ok {
-		num += v
-	}
-
-	fmt.Println(num)
+	fmt.Println(-1)
 }
 
-// 1~3 keta
-// バッティングしたらアウト
-// １桁目が０であればアウト
-// それ以外は１桁目なら１で、２桁目以降は０で埋める
+func reverse(str string) string {
+	rs := []rune(str)
+	for i, j := 0, len(str)-1; i < j; i, j = i+1, j-1 {
+		rs[i], rs[j] = rs[j], rs[i]
+	}
+	return string(rs)
+}
