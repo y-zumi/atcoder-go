@@ -10,34 +10,48 @@ type input struct {
 
 func main() {
 	var s string
-	var q int
-	fmt.Scan(&s, &q)
+	var qn int
+	fmt.Scan(&s, &qn)
 
-	queries := make([]input, q)
-	for i := range queries {
-		fmt.Scan(&queries[i].q)
-		if queries[i].q == 2 {
-			fmt.Scan(&queries[i].f1, &queries[i].f2)
+	var q, f1 int
+	var f2 []byte
+	var reverseCnt int
+	top := make([]byte, 0, qn)
+	bottom := make([]byte, 0, qn)
+
+	for i := 0; i < qn; i++ {
+		fmt.Scan(&q)
+		if q == 1 {
+			reverseCnt++
 		}
-	}
-	fmt.Println(queries)
+		if q == 2 {
+			fmt.Scan(&f1, &f2)
+			if reverseCnt%2 == 0 {
+				if f1 == 1 {
+					top = append(f2, top...)
+				}
+				if f1 == 2 {
+					bottom = append(bottom, f2...)
+				}
+			} else {
+				if f1 == 1 {
+					bottom = append(bottom, f2...)
+				}
+				if f1 == 2 {
+					top = append(f2, top...)
 
-	for _, q := range queries {
-		switch q.q {
-		case 1:
-			s = reverse(s)
-		case 2:
-			switch q.f1 {
-			case 1:
-				s = q.f2 + s
-			case 2:
-				s = s + q.f2
+				}
 			}
 		}
-		fmt.Println(s)
 	}
-	fmt.Println(s)
 
+	ans := append(top, []byte(s)...)
+	ans = append(ans, bottom...)
+	ansStr := string(ans)
+	if reverseCnt%2 == 1 {
+		ansStr = reverse(ansStr)
+	}
+	fmt.Println(ansStr)
 }
 
 func reverse(str string) string {
