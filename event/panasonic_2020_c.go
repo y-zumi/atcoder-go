@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 func main() {
-	var a, b, c float64
+	var a, b, c int64
 	fmt.Scan(&a, &b, &c)
 
-	if (math.Sqrt(a) + math.Sqrt(b)) < math.Sqrt(c) {
+	d := c - a - b
+	if d < 0 {
+		fmt.Println("No")
+		return
+	}
+	if d*d > 4*a*b {
 		fmt.Println("Yes")
 	} else {
 		fmt.Println("No")
