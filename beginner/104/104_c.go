@@ -27,20 +27,20 @@ func main() {
 			minCnt = cnt
 		} else {
 			for i := D - 1; i >= 0; i-- {
-				if bit&(1<<uint(i)) == (0 << uint(i)) {
-					for j := 0; j < p[i]; j++ {
-						cnt++
-						ans += 100 * (i + 1)
-						if ans >= G && (minCnt == 0 || cnt < minCnt) {
-							minCnt = cnt
-							break
-						}
+				if bit&(1<<uint(i)) == (1 << uint(i)) {
+					continue
+				}
+				for j := 0; j < p[i]; j++ {
+					if ans >= G {
+						break
 					}
-					// TODO: check complete point
+					ans += 100 * (i + 1)
+					cnt++
 				}
-				if ans >= G {
-					break
-				}
+				// TODO: check complete point
+			}
+			if minCnt == 0 || cnt < minCnt {
+				minCnt = cnt
 			}
 		}
 	}
